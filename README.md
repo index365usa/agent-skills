@@ -14,7 +14,7 @@ the audit works.
 ### Any agent: Claude Code, Codex, Cursor, Windsurf, … (recommended)
 
 ```bash
-npx skills add index365usa/skills
+npx skills add index365usa/agent-skills
 ```
 
 [`skills`](https://github.com/vercel-labs/skills) cross-installs to every supported coding
@@ -23,7 +23,7 @@ agent from this one repo.
 ### Claude Code plugin (alternative)
 
 ```bash
-/plugin marketplace add index365usa/skills
+/plugin marketplace add index365usa/agent-skills
 /plugin install index365
 ```
 
