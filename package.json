@@ -1,0 +1,12 @@
+{
+  "name": "index365-skills",
+  "version": "0.1.0",
+  "description": "Agent skills for index365 website audits (AI-Readiness + Marketing Signal).",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://index365.co/docs/developers",
+  "scripts": {
+    "lint": "node scripts/lint-skills.mjs"
+  }
+}

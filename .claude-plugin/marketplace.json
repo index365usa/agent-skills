@@ -1,0 +1,26 @@
+{
+  "name": "index365",
+  "owner": {
+    "name": "index365",
+    "url": "https://index365.co"
+  },
+  "plugins": [
+    {
+      "name": "index365",
+      "source": "./",
+      "description": "Audit and fix a website for AI-readiness and marketing signal, from your coding agent.",
+      "skills": [
+        "./skills/index365",
+        "./skills/index365-setup",
+        "./skills/index365-add-project",
+        "./skills/index365-delete-project",
+        "./skills/index365-run-audit",
+        "./skills/index365-read-report",
+        "./skills/index365-triage-findings",
+        "./skills/index365-audit-and-fix",
+        "./skills/index365-apply-fix",
+        "./skills/index365-monitor"
+      ]
+    }
+  ]
+}

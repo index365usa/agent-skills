@@ -1,0 +1,7 @@
+# index365 CLI/skill output (audit reports, PDFs) — never commit
+.index365/
+
+# tooling
+node_modules/
+.DS_Store
+*.log
