@@ -16,7 +16,6 @@
     "./skills/index365-read-report",
     "./skills/index365-triage-findings",
     "./skills/index365-audit-and-fix",
-    "./skills/index365-apply-fix",
-    "./skills/index365-monitor"
+    "./skills/index365-apply-fix"
   ]
 }

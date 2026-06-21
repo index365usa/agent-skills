@@ -52,7 +52,6 @@ first use or any 401. API keys are available on any active paid plan.
 | **index365-triage-findings** | Turn findings into a prioritized, file-mapped fix plan. |
 | **index365-apply-fix** | Fix one finding in the repo and show the diff. |
 | **index365-audit-and-fix** | **Flagship**: the full loop: run → read → prioritize → fix in repo → re-verify. |
-| **index365-monitor** | Diff two runs by stable findingId; track score and catch regressions. |
 | **index365-delete-project** | Remove a project. Destructive, confirms the exact domain first. |
 
 The flagship **index365-audit-and-fix** is the one to demo: point your agent at the repo

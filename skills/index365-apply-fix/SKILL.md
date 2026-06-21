@@ -40,8 +40,7 @@ A `runId` + `findingId`, and you are in the repository that serves the audited s
 4. **Show the diff** and state which `findingId` it resolves.
 
 5. **Verify** by re-running the audit (`index365 runs start --project <id> --wait`) and
-   confirming this finding is gone, or hand off to **index365-monitor** to diff against
-   the baseline. A fix that doesn't move the score isn't done.
+   confirming this finding is gone. A fix that doesn't move the score isn't done.
 
 ## STOP and ask the user when
 
