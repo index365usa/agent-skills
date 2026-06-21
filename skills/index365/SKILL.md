@@ -45,7 +45,7 @@ Act / Measure / Improve), `affectedUrls`, human `remediation`, and machine-reada
 | Prioritize / "what do I fix first" | **index365-triage-findings** |
 | Fix one finding (a pasted `findingId`, the copy-prompt button) | **index365-apply-fix** |
 | "Make my site AI-ready", audit AND fix the whole thing | **index365-audit-and-fix** (flagship) |
-| Track score over time / watch for regressions | **index365-monitor** |
+| Re-check the score after a change | **index365-run-audit** then **index365-read-report** |
 | Remove a project | **index365-delete-project** (destructive, confirms first) |
 
 ## Always first
