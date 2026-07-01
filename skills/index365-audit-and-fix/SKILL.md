@@ -26,7 +26,8 @@ supplies the findings and per-finding remediation. This is not a summary, it fix
 ## Prerequisites
 
 - Auth works: `index365 doctor` (needs `runs:write`; if 401 or missing scope, run
-  **index365-setup**: do not work around it).
+  **index365-setup**, or `npm install -g @index365/cli && index365 login` directly if that
+  skill isn't installed: do not work around it).
 - You are in the repository that serves the audited site (so `affectedUrls` map to files).
 - A `projectId` (`index365 projects list`, or **index365-add-project** for a new domain).
 

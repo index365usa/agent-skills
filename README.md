@@ -11,21 +11,24 @@ the audit works.
 
 ## Install
 
-### Any agent: Claude Code, Codex, Cursor, Windsurf, … (recommended)
-
-```bash
-npx skills add index365usa/agent-skills
-```
-
-[`skills`](https://github.com/vercel-labs/skills) cross-installs to every supported coding
-agent from this one repo.
-
-### Claude Code plugin (alternative)
+### Claude Code (recommended)
 
 ```bash
 /plugin marketplace add index365usa/agent-skills
 /plugin install index365
 ```
+
+Installs all 9 skills in one shot, no picklist.
+
+### Other agents: Codex, Cursor, Windsurf, …
+
+```bash
+npx skills add index365usa/agent-skills --all
+```
+
+[`skills`](https://github.com/vercel-labs/skills) cross-installs to every supported coding
+agent from this one repo. Without `--all` it prompts you to pick individual skills; pass
+`--all` (or `-y`) to install all 9 without the prompt.
 
 ### Prerequisite: the index365 CLI + an API key
 

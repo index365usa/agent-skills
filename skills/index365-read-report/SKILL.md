@@ -20,6 +20,8 @@ Read an audit's score and findings, and explain them. Read-only.
 
 A `runId` (from `index365 runs get`, the run-audit step, or `index365 runs start --wait`).
 For the latest Marketing Signal run you can pass `--project` instead.
+Auth: `index365 doctor`; if it fails, use **index365-setup** if installed, otherwise
+`npm install -g @index365/cli && index365 login` directly.
 
 ## Get the report payload (write to file, don't dump)
 

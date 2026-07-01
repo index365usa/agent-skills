@@ -49,8 +49,8 @@ You must read the project first and confirm the exact domain back to the user be
 ## Prerequisite
 
 A key with the `projects:delete` scope (separate from `projects:write`, a create-capable
-key cannot delete). If missing, use **index365-setup**. Project-pinned keys are blocked
-from deleting entirely (403).
+key cannot delete). If missing, use **index365-setup**, or `index365 login` directly if
+that skill isn't installed. Project-pinned keys are blocked from deleting entirely (403).
 
 ## Red flags: STOP
 
