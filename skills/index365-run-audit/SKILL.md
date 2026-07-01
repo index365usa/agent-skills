@@ -17,7 +17,8 @@ Start an audit and (optionally) wait for the score.
 ## Prerequisites
 
 - A `projectId` (from **index365-add-project** or `index365 projects list`).
-- A key with `runs:write` (`index365 doctor` shows scopes). Missing → **index365-setup**.
+- A key with `runs:write` (`index365 doctor` shows scopes). Missing → **index365-setup**,
+  or `npm install -g @index365/cli && index365 login` directly if that skill isn't installed.
 
 ## Pick the audit type
 

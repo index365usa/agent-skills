@@ -22,6 +22,8 @@ Turn a completed run's findings into a prioritized, file-mapped plan. Planning o
 
 A `runId` for a completed run, and (ideally) you are inside the repository that serves the
 audited site, so findings can map to files.
+Auth: `index365 doctor`; if it fails, use **index365-setup** if installed, otherwise
+`npm install -g @index365/cli && index365 login` directly.
 
 ## Workflow
 

@@ -17,7 +17,8 @@ Create a project so you can run audits against a domain.
 ## Prerequisite
 
 A key with the `projects:write` scope (`index365 doctor` shows scopes). If it's missing,
-use **index365-setup** to create a scoped key, do not work around it.
+use **index365-setup** to create a scoped key, do not work around it. Not installed?
+`npm install -g @index365/cli && index365 login` gets a working key in one step.
 
 ## Create
 

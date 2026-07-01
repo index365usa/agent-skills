@@ -51,7 +51,9 @@ Act / Measure / Improve), `affectedUrls`, human `remediation`, and machine-reada
 ## Always first
 
 Run `index365 doctor`. If the key is missing or auth fails, go to **index365-setup**
-before anything else, do not work around a missing key.
+before anything else, do not work around a missing key. If **index365-setup** isn't
+installed (a partial `npx skills add` install skipped it), run
+`npm install -g @index365/cli && index365 login` yourself, then re-run `doctor`.
 
 ## Output discipline
 

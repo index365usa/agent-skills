@@ -21,6 +21,8 @@ Apply one finding's fix in the current repo and show the diff.
 ## Prerequisite
 
 A `runId` + `findingId`, and you are in the repository that serves the audited site.
+Auth: `index365 doctor`; if it fails, use **index365-setup** if installed, otherwise
+`npm install -g @index365/cli && index365 login` directly.
 
 ## Workflow
 
