@@ -17,9 +17,11 @@ Get the `@index365/cli` installed and authenticated for the task.
 
 ```bash
 npm install -g @index365/cli@0.6.0   # then the bin is `index365`
-# or run ad hoc without installing:
-npx -y @index365/cli@0.6.0 --help
+# If global installation is unavailable, define this pinned wrapper in the current shell:
+index365() { npx -y @index365/cli@0.6.0 "$@"; }
 ```
+
+Either path makes every `index365` command below use the tested CLI version.
 
 ## 2. Log in
 
