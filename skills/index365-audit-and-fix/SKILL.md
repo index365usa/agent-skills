@@ -7,14 +7,7 @@ description: |
   index365 score", or the user pastes a report and says "act on this". This is the full
   autonomous loop. For a single finding use index365-apply-fix; to only read, use
   index365-read-report.
-allowed-tools:
-  - Bash(index365 *)
-  - Read
-  - Edit
-  - Write
-  - Grep
-  - Glob
-  - Agent
+allowed-tools: Bash(index365 *) Read Edit Write Grep Glob Agent
 ---
 
 # index365 audit and fix
@@ -45,7 +38,9 @@ supplies the findings and per-finding remediation. This is not a summary, it fix
       re-deriving the fix. (This is **index365-triage-findings**.)
 - [ ] **4. Apply in-repo fixes**: per top finding:
       `index365 findings get --run <runId> <findingId> --json`; map `affectedUrls` → file
-      with `Glob`/`Grep`; make one logical `Edit`; show the diff. (This is
+      with `Glob`/`Grep`. If the user requested preview or approval before application,
+      show a proposed patch and STOP without editing. Otherwise, the direct audit-and-fix
+      request authorizes one logical `Edit`; show the actual diff. (This is
       **index365-apply-fix**, repeated.) STOP and ask if a fix exceeds the finding, or
       `affectedUrls` doesn't resolve to a file; skip out-of-repo findings.
 - [ ] **5. Re-run and verify**: re-run the audit; compare the new score/findings against

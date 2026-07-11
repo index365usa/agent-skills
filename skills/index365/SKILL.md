@@ -9,9 +9,7 @@ description: |
   / "copy fix prompt for your agent" button. This is the router: it picks the right
   index365 sub-skill. Do NOT trigger for unrelated SEO tools, generic web scraping,
   or local-file tasks.
-allowed-tools:
-  - Bash(index365 *)
-  - Bash(npx -y @index365/cli *)
+allowed-tools: Bash(index365 *) Bash(npx -y @index365/cli *)
 ---
 
 # index365

@@ -1,12 +1,12 @@
 {
   "name": "index365",
-  "description": "Audit and fix a website for AI-readiness and marketing signal, from your coding agent.",
+  "description": "Request AI-Readiness and Marketing Signal scans and use prioritized findings from your coding agent.",
   "version": "0.1.0",
   "author": {
     "name": "index365",
     "url": "https://index365.co"
   },
-  "homepage": "https://index365.co/docs/developers",
+  "homepage": "https://index365.co/docs/developers/agent-skills",
   "skills": [
     "./skills/index365",
     "./skills/index365-setup",

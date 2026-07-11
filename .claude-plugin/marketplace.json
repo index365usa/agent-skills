@@ -8,7 +8,7 @@
     {
       "name": "index365",
       "source": "./",
-      "description": "Audit and fix a website for AI-readiness and marketing signal, from your coding agent.",
+      "description": "Request AI-Readiness and Marketing Signal scans and use prioritized findings from your coding agent.",
       "skills": [
         "./skills/index365",
         "./skills/index365-setup",

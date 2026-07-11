@@ -6,12 +6,7 @@ description: |
   audit", "turn the findings into a plan", "which of these matter". Produces a prioritized,
   file-mapped fix plan. It plans only, it does not edit code (use index365-apply-fix or
   index365-audit-and-fix to apply).
-allowed-tools:
-  - Bash(index365 *)
-  - Read
-  - Grep
-  - Glob
-  - Agent
+allowed-tools: Bash(index365 *) Read Grep Glob Agent
 ---
 
 # index365 triage findings

@@ -6,8 +6,7 @@ description: |
   "run a marketing signal audit", "audit example.com again". Covers both audit types
   (AI-Readiness and Marketing Signal) and how to wait for the score. A run is a paid
   action, see below.
-allowed-tools:
-  - Bash(index365 *)
+allowed-tools: Bash(index365 *)
 ---
 
 # index365 run audit

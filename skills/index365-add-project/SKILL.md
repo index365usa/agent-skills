@@ -6,8 +6,7 @@ description: |
   "create an index365 project for…", or any run/audit request where the domain has no
   project yet (a `projects list` doesn't show it). Creating a project is the prerequisite
   for running an audit.
-allowed-tools:
-  - Bash(index365 *)
+allowed-tools: Bash(index365 *)
 ---
 
 # index365 add project
@@ -16,8 +15,9 @@ Create a project so you can run audits against a domain.
 
 ## Prerequisite
 
-A key with the `projects:write` scope (`index365 doctor` shows scopes). If it's missing,
-use **index365-setup** to create a scoped key, do not work around it.
+An authenticated credential with `projects:write` (`index365 doctor` shows scopes).
+Current dashboard API keys include it by default. If it is missing, use
+**index365-setup** to reauthenticate through a supported path; do not work around it.
 
 ## Create
 
@@ -29,8 +29,8 @@ index365 projects create --domain example.com --name "Example" --json
 - **Idempotent by domain.** If a project for that domain already exists, the same project
   is returned (the human output shows `[already existed]`, the JSON has `"idempotent": true`).
   Safe to re-run, it never creates a duplicate.
-- Per-plan project limits apply (Starter 1 / Pro 5 / Agency 25). Exit code `5` means the
-  limit is reached.
+- Projects are unlimited on every current plan, including Free. Paid scans remain
+  separately credit-gated.
 
 Capture the returned `projectId`, every audit command needs it.
 
