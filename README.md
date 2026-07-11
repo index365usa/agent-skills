@@ -11,7 +11,7 @@ These skills wrap [`@index365/cli`](https://www.npmjs.com/package/@index365/cli)
 ### Claude Code, Codex, Cursor, Windsurf, and other supported agents
 
 ```bash
-npx skills add index365usa/agent-skills
+npx -y skills@1.5.16 add index365usa/agent-skills
 ```
 
 The [`skills`](https://github.com/vercel-labs/skills) installer installs this repository's skills into supported coding-agent runtimes.
@@ -26,7 +26,7 @@ The [`skills`](https://github.com/vercel-labs/skills) installer installs this re
 ## Prerequisite: index365 CLI and login
 
 ```bash
-npm install -g @index365/cli
+npm install -g @index365/cli@0.6.0
 index365 login
 index365 doctor
 ```

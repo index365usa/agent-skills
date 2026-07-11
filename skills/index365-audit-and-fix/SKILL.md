@@ -29,7 +29,8 @@ supplies the findings and per-finding remediation. This is not a summary, it fix
       (`runs start`) by default; Marketing Signal (`marketing run`) if the user asked about
       demand/traffic/conversion.
 - [ ] **2. Run and wait**: `index365 runs start --project <id> --wait --json` (record the
-      baseline `score` and `runId`). Paid action; pass `--idempotency-key` so a retry can't
+      exact command tree, `projectId`, optional target URL, baseline `score`, `runId`, and
+      baseline idempotency key). Paid action; pass `--idempotency-key` so a retry can't
       double-spend.
 - [ ] **3. Read report + prioritize**:
       `index365 reports context <runId> > .index365/report.json` (this CLI prints JSON to
@@ -43,9 +44,12 @@ supplies the findings and per-finding remediation. This is not a summary, it fix
       request authorizes one logical `Edit`; show the actual diff. (This is
       **index365-apply-fix**, repeated.) STOP and ask if a fix exceeds the finding, or
       `affectedUrls` doesn't resolve to a file; skip out-of-repo findings.
-- [ ] **5. Re-run and verify**: re-run the audit; compare the new score/findings against
-      the baseline, matching by stable `findingId`. A fix that doesn't move the score or
-      clear its finding is not done, re-investigate.
+- [ ] **5. Re-run and verify**: repeat the baseline command tree and target URL with a new
+      stable verification key such as `verify-<baselineRunId>-batch-1`; reuse that new key
+      only for retries of this post-fix request. Never reuse the baseline key, which would
+      replay the baseline run. Compare the new score/findings against the baseline,
+      matching by stable `findingId`. A fix that doesn't move the score or clear its
+      finding is not done, re-investigate.
 - [ ] **6. Report the delta**: baseline → new score, the `findingId`s fixed,
       applied-but-unmoved (re-investigate these), and out-of-repo findings with each
       `humanUrl` so the user can handle them in the dashboard.

@@ -11,8 +11,8 @@ Use this example only on a website you are authorized to assess and change. It r
 ## Install and verify
 
 ```bash
-npx skills add index365usa/agent-skills
-npm install -g @index365/cli
+npx -y skills@1.5.16 add index365usa/agent-skills
+npm install -g @index365/cli@0.6.0
 index365 login
 index365 doctor
 ```

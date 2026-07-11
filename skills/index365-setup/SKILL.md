@@ -6,7 +6,7 @@ description: |
   or when the user says "connect index365", "set up index365", "log in to index365", or
   "add my index365 API key". This is the prerequisite gate for every other index365 skill.
   Do not work around missing or insufficient authentication, fix it here.
-allowed-tools: Bash(index365 *) Bash(npx -y @index365/cli *) Bash(npm install -g @index365/cli) Bash(claude mcp add *)
+allowed-tools: Bash(index365 *) Bash(npx -y @index365/cli@0.6.0 *) Bash(npm install -g @index365/cli@0.6.0) Bash(claude mcp add *)
 ---
 
 # index365 setup
@@ -16,9 +16,9 @@ Get the `@index365/cli` installed and authenticated for the task.
 ## 1. Install
 
 ```bash
-npm install -g @index365/cli   # then the bin is `index365`
+npm install -g @index365/cli@0.6.0   # then the bin is `index365`
 # or run ad hoc without installing:
-npx -y @index365/cli --help
+npx -y @index365/cli@0.6.0 --help
 ```
 
 ## 2. Log in
@@ -82,8 +82,8 @@ projects. Credit-spending and destructive calls retain their separate confirmati
 
 | Symptom | Fix |
 | --- | --- |
-| `doctor` says key MISSING | run `index365 login` |
-| Exit code 3 / "auth" on any command | key is wrong or revoked: `index365 login` with a fresh key |
+| `doctor` says key MISSING | run `index365 login`; without a browser, use `index365 login --key <key>` or set `INDEX365_API_KEY`, and never print the key in shared logs |
+| Exit code 3 / "auth" on any command | key is wrong or revoked: run browser login again, or use `index365 login --key <key>` / `INDEX365_API_KEY` with a fresh key in a non-browser runtime |
 | A command says the credential lacks a scope | run browser login again or use a fresh current full-scope API key; if the scope is still absent, stop and report the unsupported grant |
-| `index365: command not found` | npm global bin not on PATH, or use `npx -y @index365/cli` |
+| `index365: command not found` | npm global bin not on PATH, or use `npx -y @index365/cli@0.6.0` |
 | Exit code 5 / quota or rate | plan limit or 60/min rate, wait and retry, or check the plan |

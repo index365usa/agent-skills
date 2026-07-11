@@ -15,7 +15,9 @@ Apply one finding's fix in the current repo and show the diff.
 
 ## Prerequisite
 
-A `runId` + `findingId`, and you are in the repository that serves the audited site.
+A `projectId` + baseline `runId` + `findingId`, the original audit command (`runs start`
+or `marketing run`), its target URL when one was supplied, and the repository that serves
+the audited site.
 
 ## Workflow
 
@@ -39,10 +41,15 @@ A `runId` + `findingId`, and you are in the repository that serves the audited s
    the repository changed. For an authorized edit, show the actual diff and state which
    `findingId` it resolves.
 
-5. **Verify only after application** by re-running the audit
-   (`index365 runs start --project <id> --wait`) and confirming this finding is gone. A
-   proposed patch is not eligible for re-run proof. A fix that doesn't move the score
-   isn't done.
+5. **Verify only after application** by repeating the original audit command with the same
+   project and target URL, plus a distinct stable key for this post-fix verification. For
+   AI-Readiness, use
+   `index365 runs start --project <projectId> [--url <originalUrl>] --wait --json --idempotency-key "verify-<baselineRunId>-<findingId>-1"`.
+   For Marketing Signal, use the same arguments with `index365 marketing run`. Reuse the
+   verification key only when retrying this verification request. Do not reuse the
+   baseline audit's key, which would replay the baseline run instead of measuring the fix.
+   Confirm the finding is gone. A proposed patch is not eligible for re-run proof. A fix
+   that doesn't move the score isn't done.
 
 ## STOP and ask the user when
 
