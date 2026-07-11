@@ -6,10 +6,7 @@ description: |
   the findings", "what did the audit find", "show the marketing signal report". Read-only:
   it reads and explains, it does not fix. To fix, use index365-apply-fix or
   index365-audit-and-fix.
-allowed-tools:
-  - Bash(index365 *)
-  - Read
-  - Grep
+allowed-tools: Bash(index365 *) Read Grep
 ---
 
 # index365 read report

@@ -1,82 +1,69 @@
-# index365 skills
+# index365 Agent Skills
 
-Agent skills for [index365](https://index365.co): audit a website for **AI-Readiness**
-(can AI agents and AI search read it?) and **Marketing Signal** (can demand find, trust,
-act on, and measure it?), then fix what's found, all from your coding agent.
+**Power AI agents with intelligence.**
 
-These skills wrap the [`@index365/cli`](https://www.npmjs.com/package/@index365/cli), which
-wraps the public `/api/v1`. The API holds all the logic, so the skills stay thin and never
-go stale: they teach an agent *which command to run and how to judge the result*, not how
-the audit works.
+Agent Skills for index365, an agent-native website findings platform. Request an AI-Readiness or Marketing Signal scan of an authorized URL, read prioritized findings with evidence and remediation, make a bounded correction in the local project, and re-run the scan for proof.
+
+These skills wrap [`@index365/cli`](https://www.npmjs.com/package/@index365/cli), which wraps the public `/api/v1`. The API owns product logic. Skills teach a coding agent which supported command to run and how to judge the result.
 
 ## Install
 
-### Any agent: Claude Code, Codex, Cursor, Windsurf, … (recommended)
+### Claude Code, Codex, Cursor, Windsurf, and other supported agents
 
 ```bash
-npx skills add index365usa/agent-skills
+npx -y skills@1.5.16 add index365usa/agent-skills
 ```
 
-[`skills`](https://github.com/vercel-labs/skills) cross-installs to every supported coding
-agent from this one repo.
+The [`skills`](https://github.com/vercel-labs/skills) installer installs this repository's skills into supported coding-agent runtimes.
 
-### Claude Code plugin (alternative)
+### Claude Code plugin alternative
 
 ```bash
 /plugin marketplace add index365usa/agent-skills
 /plugin install index365
 ```
 
-### Prerequisite: the index365 CLI + an API key
-
-The skills call the `index365` CLI. Install it and log in once:
+## Prerequisite: index365 CLI and login
 
 ```bash
-npm install -g @index365/cli
-index365 login        # paste an i365_ key from the dashboard: Org settings → API keys
-index365 doctor       # verify
+npm install -g @index365/cli@0.6.0
+index365 login
+index365 doctor
 ```
 
-The **index365-setup** skill walks an agent through this (install, scopes, MCP config) on
-first use or any 401. API keys are available on any active paid plan.
+Browser login is the default. In a supported non-browser environment, use a dedicated revocable API key and verify it with `index365 doctor`. Current API keys are organization-scoped and carry the full work-area scope set. The **index365-setup** skill handles first use, authentication failures, scope readback, and MCP configuration.
 
-## The skills
+## Skills
 
-| Skill | Use it to |
+| Skill | Purpose |
 | --- | --- |
-| **index365** | Router, start here; explains the two audits and routes to the right skill. |
-| **index365-setup** | Install, log in, scope a key, configure MCP. The prerequisite gate. |
-| **index365-add-project** | Add a domain as a project (idempotent by domain). |
-| **index365-run-audit** | Run an AI-Readiness or Marketing Signal audit and wait for the score. |
-| **index365-read-report** | Read the score and findings. Read-only. |
-| **index365-triage-findings** | Turn findings into a prioritized, file-mapped fix plan. |
-| **index365-apply-fix** | Fix one finding in the repo and show the diff. |
-| **index365-audit-and-fix** | **Flagship**: the full loop: run → read → prioritize → fix in repo → re-verify. |
-| **index365-delete-project** | Remove a project. Destructive, confirms the exact domain first. |
+| **index365** | Route an index365 request to the correct skill. |
+| **index365-setup** | Install, authenticate, verify, and configure MCP. |
+| **index365-add-project** | Add a domain as a project, idempotently by domain. |
+| **index365-run-audit** | Request an AI-Readiness or Marketing Signal scan and wait for completion. |
+| **index365-read-report** | Read the score and prioritized findings without changing code. |
+| **index365-triage-findings** | Turn findings into a prioritized, file-mapped correction plan. |
+| **index365-apply-fix** | Apply one approved finding correction and show the diff. |
+| **index365-audit-and-fix** | Run the bounded scan, findings, correction, approval, and re-run workflow. |
+| **index365-delete-project** | Remove a project after exact-domain confirmation. |
 
-The flagship **index365-audit-and-fix** is the one to demo: point your agent at the repo
-that serves your site and it audits, fixes the in-repo findings, and re-runs to confirm
-the score moved.
+The current skills cover AI-Readiness and Marketing Signal. They do not add a dedicated Website Security scan, replace a full crawler, monitor AI visibility, or authorize autonomous fixes.
 
-## How it works (the layering law)
+## How it works
 
-```
-skills  →  @index365/cli  →  /api/v1  →  (audit engine + DB)
+```text
+Agent Skills -> @index365/cli -> /api/v1 -> index365 findings
 ```
 
-A skill never builds a bearer header, copies a result schema inline, or paginates by hand.
-If the CLI changes a flag default or a field name, the skills keep working because they
-reference *behavior* (`--wait` polls; findings have a stable `findingId`), not
-implementation. There's also an MCP server (`@index365/mcp`) for hosts that prefer tools
-over a shell; `index365 mcp config` prints the setup.
+A skill does not hand-build authentication headers, copy the product schema, or reimplement API pagination. Findings remain the source for evidence, severity, affected URLs, remediation, and supported agent actions.
 
 ## Output discipline
 
-Audit artifacts (reports, PDFs) are written to a git-ignored `.index365/` directory and
-read with `jq`/`grep`, never dumped whole into agent context.
+Generated artifacts are written to the git-ignored `.index365/` directory and read selectively. Do not dump a complete report into agent context. Review every proposed correction before applying it, then re-run the same scan before claiming improvement.
 
-## Docs & license
+## Documentation and license
 
-- Developer docs: https://index365.co/docs/developers
-- CLI: https://www.npmjs.com/package/@index365/cli · MCP: https://www.npmjs.com/package/@index365/mcp
+- Developer documentation: https://index365.co/docs/developers
+- CLI: https://www.npmjs.com/package/@index365/cli
+- MCP: https://www.npmjs.com/package/@index365/mcp
 - License: [MIT](LICENSE)

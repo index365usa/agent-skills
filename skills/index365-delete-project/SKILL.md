@@ -6,17 +6,17 @@ description: |
   "clean up old projects". This is the only destructive index365 action and it is
   irreversible. Use this skill whenever a delete is requested, never call
   `index365 projects delete` ad hoc.
-allowed-tools:
-  - Bash(index365 *)
+allowed-tools: Bash(index365 *)
 ---
 
 # index365 delete project
 
 Permanently delete an index365 project.
 
-**Deleting a project is a hard, irreversible delete.** It cascades: the project's audit
-runs, findings, API keys pinned to it, and monitoring are removed. There is no recovery
-window and no soft-delete. Treat it accordingly.
+**Deleting a project is a hard, irreversible delete of the project record.** Related
+project-scoped API keys, monitored assets, and monitoring events cascade. Run history is
+preserved with its project link cleared, so historical run findings remain available by
+run. There is no project recovery window or soft-delete. Treat it accordingly.
 
 ## Iron rule
 
@@ -32,10 +32,12 @@ You must read the project first and confirm the exact domain back to the user be
    Identify the single project the user means. If more than one could match, list the
    candidates and ask which one. Never guess.
 
-2. **Confirm the exact domain with the user.** State what will be deleted and that it is
-   permanent and cascading:
-   > "This permanently deletes `example.com` (projectId `prj_…`) and all its audits and
-   > findings. This cannot be undone. Confirm the domain to proceed."
+2. **Confirm the exact domain with the user.** State what will be deleted and what is
+   preserved:
+   > "This permanently deletes the `example.com` project (projectId `prj_…`) and its
+   > project-scoped monitoring/configuration. Existing run history and findings are
+   > preserved without the project link. The project deletion cannot be undone. Confirm
+   > the domain to proceed."
    Wait for the user to confirm the exact domain.
 
 3. **Delete with the echo-confirm.** The API requires the project's exact domain as
@@ -48,9 +50,9 @@ You must read the project first and confirm the exact domain back to the user be
 
 ## Prerequisite
 
-A key with the `projects:delete` scope (separate from `projects:write`, a create-capable
-key cannot delete). If missing, use **index365-setup**. Project-pinned keys are blocked
-from deleting entirely (403).
+An authenticated credential with `projects:delete`. Current dashboard API keys carry the
+full work-area scope set, including create and delete. If the scope is absent, use
+**index365-setup** to reauthenticate through a supported path.
 
 ## Red flags: STOP
 
@@ -68,5 +70,5 @@ from deleting entirely (403).
 | --- | --- |
 | "It's obviously the only project" | Read `projects list` and confirm anyway. Cheap. |
 | "The user clearly wants all of them gone" | Confirm each domain individually. No bulk delete. |
-| "I'll soft-delete / it's recoverable" | It is NOT. Hard delete, cascading, no recovery. |
+| "I'll soft-delete / restore the project later" | The project record is hard-deleted with no recovery; historical runs are preserved separately. |
 | "Echo-confirm is just ceremony" | It's the thing that makes a wrong delete impossible. |
