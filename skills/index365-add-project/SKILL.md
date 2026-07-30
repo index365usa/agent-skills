@@ -17,7 +17,10 @@ Create a project so you can run audits against a domain.
 
 An authenticated credential with `projects:write` (`index365 doctor` shows scopes).
 Current dashboard API keys include it by default. If it is missing, use
-**index365-setup** to reauthenticate through a supported path; do not work around it.
+**index365-setup** to reauthenticate through a supported path. If **index365-setup** is
+not installed, run `index365 login` (browser login is the default). After either recovery
+path, re-run `index365 doctor` before continuing. Do not work around missing
+authentication or scopes.
 
 ## Create
 

@@ -23,6 +23,15 @@ run. There is no project recovery window or soft-delete. Treat it accordingly.
 **Never delete a project the user did not name by its exact domain in this conversation.**
 You must read the project first and confirm the exact domain back to the user before deleting.
 
+## Prerequisite
+
+Run `index365 doctor` before any workflow command. The authenticated credential must include
+`projects:delete`; current dashboard API keys carry the full work-area scope set, including
+create and delete. If authentication fails or the scope is absent, use **index365-setup** to
+reauthenticate through a supported path. If **index365-setup** is not installed, run
+`index365 login` (browser login is the default). After either recovery path, re-run
+`index365 doctor` before continuing. Do not work around missing authentication or scopes.
+
 ## Workflow
 
 1. **Find it: read before destroy.**
@@ -47,12 +56,6 @@ You must read the project first and confirm the exact domain back to the user be
    ```
 
 4. **Report** what was deleted (domain + projectId).
-
-## Prerequisite
-
-An authenticated credential with `projects:delete`. Current dashboard API keys carry the
-full work-area scope set, including create and delete. If the scope is absent, use
-**index365-setup** to reauthenticate through a supported path.
 
 ## Red flags: STOP
 
