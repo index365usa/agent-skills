@@ -154,6 +154,7 @@ async function fetchLatest(pkg) {
 	try {
 		const res = await fetch(`https://registry.npmjs.org/${pkg.replace("/", "%2F")}`, {
 			headers: { accept: "application/vnd.npm.install-v1+json" },
+			signal: AbortSignal.timeout(5_000),
 		});
 		if (!res.ok) return null;
 		return (await res.json())?.["dist-tags"]?.latest ?? null;
