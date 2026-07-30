@@ -18,8 +18,10 @@ supplies the findings and per-finding remediation. This is not a summary, it fix
 
 ## Prerequisites
 
-- Auth works: `index365 doctor` (needs `runs:write`; if 401 or missing scope, run
-  **index365-setup**: do not work around it).
+- Auth works: `index365 doctor` (needs `runs:write`). If authentication fails or the scope
+  is missing, use **index365-setup**. If that skill is not installed, run `index365 login`
+  (browser login is the default). After either recovery path, re-run `index365 doctor`
+  before continuing. Do not work around missing authentication or scopes.
 - You are in the repository that serves the audited site (so `affectedUrls` map to files).
 - A `projectId` (`index365 projects list`, or **index365-add-project** for a new domain).
 

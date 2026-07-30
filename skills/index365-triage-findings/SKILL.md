@@ -18,6 +18,11 @@ Turn a completed run's findings into a prioritized, file-mapped plan. Planning o
 A `runId` for a completed run, and (ideally) you are inside the repository that serves the
 audited site, so findings can map to files.
 
+Before calling the API, run `index365 doctor`. If authentication fails, use
+**index365-setup**. If that skill is not installed, run `index365 login` (browser login is
+the default). After either recovery path, re-run `index365 doctor` before continuing. Do
+not work around missing authentication or scopes.
+
 ## Workflow
 
 1. **Pull the report to a file** (don't dump it into context):

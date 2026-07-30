@@ -11,10 +11,11 @@ These skills wrap [`@index365/cli`](https://www.npmjs.com/package/@index365/cli)
 ### Claude Code, Codex, Cursor, Windsurf, and other supported agents
 
 ```bash
-npx -y skills@1.5.16 add index365usa/agent-skills
+npx -y skills@1.5.16 add index365usa/agent-skills --all
 ```
 
-The [`skills`](https://github.com/vercel-labs/skills) installer installs this repository's skills into supported coding-agent runtimes.
+The [`skills`](https://github.com/vercel-labs/skills) installer installs all nine skills
+into supported coding-agent runtimes without the per-skill picker.
 
 ### Claude Code plugin alternative
 
