@@ -8,31 +8,35 @@ These skills wrap [`@index365/cli`](https://www.npmjs.com/package/@index365/cli)
 
 ## Install
 
-### Claude Code, Codex, Cursor, Windsurf, and other supported agents
-
-```bash
-npx -y skills@1.5.16 add index365usa/agent-skills --all
-```
-
-The [`skills`](https://github.com/vercel-labs/skills) installer installs all nine skills
-into supported coding-agent runtimes without the per-skill picker.
-
-### Claude Code plugin alternative
+### Claude Code
 
 ```bash
 /plugin marketplace add index365usa/agent-skills
 /plugin install index365
 ```
 
+Installs all nine skills as one plugin, with no per-skill picker.
+
+### Codex, Cursor, Windsurf, and other supported agents
+
+```bash
+npx -y skills add index365usa/agent-skills --all
+```
+
+The [`skills`](https://github.com/vercel-labs/skills) installer adds all nine skills to
+supported coding-agent runtimes. `--all` is what skips the per-skill picker.
+
 ## Prerequisite: index365 CLI and login
 
 ```bash
-npm install -g @index365/cli@0.6.0
+npm install -g @index365/cli
 index365 login
 index365 doctor
 ```
 
-Browser login is the default. In a supported non-browser environment, use a dedicated revocable API key and verify it with `index365 doctor`. Current API keys are organization-scoped and carry the full work-area scope set. The **index365-setup** skill handles first use, authentication failures, scope readback, and MCP configuration.
+Install unpinned. The CLI reports its own updates, and an unpinned install line cannot go stale here.
+
+`index365 login` asks how you want to sign in, and browser sign-in is the default choice, so pressing Enter opens the browser (loopback and PKCE, nothing to paste). `index365 login --web` skips the menu. A non-interactive runtime has no menu, so pass `--web`, or use a dedicated revocable API key through `index365 login --key i365_...` or `INDEX365_API_KEY`. Current API keys are organization-scoped and carry the full work-area scope set. The **index365-setup** skill handles first use, authentication failures, scope readback, and MCP configuration.
 
 ## Skills
 
@@ -46,7 +50,7 @@ Browser login is the default. In a supported non-browser environment, use a dedi
 | **index365-triage-findings** | Turn findings into a prioritized, file-mapped correction plan. |
 | **index365-apply-fix** | Apply one approved finding correction and show the diff. |
 | **index365-audit-and-fix** | Run the bounded scan, findings, correction, approval, and re-run workflow. |
-| **index365-delete-project** | Remove a project after exact-domain confirmation. |
+| **index365-delete-project** | Archive a project after exact-domain confirmation. Reversible with `projects restore`. |
 
 The current skills cover AI-Readiness and Marketing Signal. They do not add a dedicated Website Security scan, replace a full crawler, monitor AI visibility, or authorize autonomous fixes.
 

@@ -5,14 +5,14 @@ Use this example only on a website you are authorized to assess and change. It r
 ## Prerequisites
 
 - Node.js 20.18 or newer.
-- An index365 account. Browser login is the default; in a supported non-browser environment, use a dedicated revocable organization-scoped API key and verify it with `index365 doctor`.
+- An index365 account. `index365 login` defaults to browser sign-in; in a non-interactive runtime, pass `--web` or use a dedicated revocable organization-scoped API key and verify it with `index365 doctor`.
 - A local repository that serves the website being assessed.
 
 ## Install and verify
 
 ```bash
-npx -y skills@1.5.16 add index365usa/agent-skills
-npm install -g @index365/cli@0.6.0
+npx -y skills add index365usa/agent-skills --all
+npm install -g @index365/cli
 index365 login
 index365 doctor
 ```

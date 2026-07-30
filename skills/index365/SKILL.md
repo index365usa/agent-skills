@@ -9,7 +9,7 @@ description: |
   / "copy fix prompt for your agent" button. This is the router: it picks the right
   index365 sub-skill. Do NOT trigger for unrelated SEO tools, generic web scraping,
   or local-file tasks.
-allowed-tools: Bash(index365 *) Bash(npx -y @index365/cli@0.6.0 *)
+allowed-tools: Bash(index365 *) Bash(npx -y @index365/cli *)
 ---
 
 # index365
@@ -44,13 +44,13 @@ Act / Measure / Improve), `affectedUrls`, human `remediation`, and machine-reada
 | Fix one finding (a pasted `findingId`, the copy-prompt button) | **index365-apply-fix** |
 | "Make my site AI-ready", audit AND fix the whole thing | **index365-audit-and-fix** (flagship) |
 | Re-check the score after a change | **index365-run-audit** then **index365-read-report** |
-| Remove a project | **index365-delete-project** (destructive, confirms first) |
+| Remove a project | **index365-delete-project** (archives, reversible, confirms first) |
 
 ## Always first
 
 Run `index365 doctor`. If the key is missing or auth fails, go to **index365-setup**
 before anything else. If **index365-setup** is not installed, run `index365 login`
-(browser login is the default). After either recovery path, re-run `index365 doctor`
+(browser is the default choice; `--web` skips the menu). After either recovery path, re-run `index365 doctor`
 before continuing. Do not work around missing authentication or scopes.
 
 ## Output discipline
