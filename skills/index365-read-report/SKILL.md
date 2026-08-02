@@ -1,7 +1,7 @@
 ---
 name: index365-read-report
 description: |
-  Use when the user wants to see the results of an index365 audit without changing code.
+  Use when the user wants to see the results of an index365 scan without changing code.
   Triggers: "show my score", "what's wrong with my site", "read the audit report", "list
   the findings", "what did the audit find", "show the marketing signal report". Read-only:
   it reads and explains, it does not fix. To fix, use index365-apply-fix or
@@ -11,61 +11,52 @@ allowed-tools: Bash(index365 *) Read Grep
 
 # index365 read report
 
-Read an audit's score and findings, and explain them. Read-only.
+Read a scan's score and findings, and explain them. Read-only, and no ids needed:
+every command defaults to the latest completed run and echoes what it resolved
+(`yoursite.com · scanned 2m ago`). A domain narrows to that site's latest run.
 
-## Prerequisite
-
-A `runId` (from `index365 runs get`, the run-audit step, or `index365 runs start --wait`).
-For the latest Marketing Signal run you can pass `--project` instead.
-
-Before calling the API, run `index365 doctor`. If authentication fails, use
-**index365-setup**. If that skill is not installed, run `index365 login` (browser login is
-the default). After either recovery path, re-run `index365 doctor` before continuing. Do
-not work around missing authentication or scopes.
-
-## Get the report payload (write to file, don't dump)
-
-`reports context` prints the full JSON to stdout. Redirect it to the git-ignored dir,
-then read selectively, never paste a whole report into context.
+## Score first
 
 ```bash
-mkdir -p .index365
-index365 reports context run_xxx > .index365/report-run_xxx.json
-jq '{score, findingsTotal, severityCounts}' .index365/report-run_xxx.json
+index365 report
 ```
 
-## Triage the findings
+On a terminal this renders the score card; piped or with `--json` it prints the
+compact agent-ready JSON context (score, severity counts, top findings, exec
+summary). That JSON is bounded by construction, so it is safe to read directly.
+
+## Then findings
 
 ```bash
-# list (newest contract: stable findingId, severity, category, title):
-index365 findings list --run run_xxx --severity critical
-index365 findings list --run run_xxx --severity high
-
-# full detail + remediation for one finding:
-index365 findings get --run run_xxx f_abcd1234 --json
+index365 findings                # table from the latest run
+index365 findings get 1          # first finding in full, plus a fix prompt
 ```
 
-Each finding has: `findingId` (stable), `severity`, `category`, `title`, `detail`,
-`remediation` (human), `affectedUrls`, and `agentActions` (machine-readable fix steps).
+Filter the table with `--severity critical` (then `high`), `--category <c>`, or, for
+Marketing Signal runs, `--stage <s>` (Find / Trust / Act / Measure / Improve).
+Measure-stage findings are often public-signal-only and need a connected analytics
+account to verify fully. `findings get <n>` takes the ordinal straight from the
+table; each finding also has a stable `findingId` that stays constant across
+re-reads, which is what you match on when comparing runs.
 
-## Marketing Signal reports
+## Large reports: save, then read selectively
+
+Only when you need every finding at once (full triage, cross-run diffing), save the
+full report to the git-ignored `.index365/` dir and read it with `jq` / `grep`:
 
 ```bash
-index365 marketing report --project prj_xxx > .index365/marketing-prj_xxx.json
-index365 marketing findings --project prj_xxx --severity high
+index365 report --save   # writes the full report into .index365/ by default
 ```
 
-Marketing findings carry a `stage` (Find / Trust / Act / Measure / Improve) instead of a
-category. Measure-stage findings are often public-signal-only and need a connected
-analytics account to verify fully.
+Never paste a whole saved report into context. Summarize the score, the severity
+counts, and the top findings.
 
-## Output discipline
+## History
 
-- Write large payloads to `.index365/` (git-ignored); read with `jq` / `grep` / `head`.
-- Summarize the score, the severity counts, and the top findings, don't relay the raw JSON.
-- For pagination, follow `pagination.nextCursor` with `--cursor`.
+`index365 results` lists your scans newest first; `index365 results yoursite.com` is
+that site's score over time, the fastest way to show whether a fix moved the number.
 
 ## Next
 
-To act on the findings: **index365-triage-findings** (plan), **index365-apply-fix** (one
-fix), or **index365-audit-and-fix** (the full loop).
+To act on the findings: **index365-triage-findings** (plan), **index365-apply-fix**
+(one fix), or **index365-audit-and-fix** (the full loop).
