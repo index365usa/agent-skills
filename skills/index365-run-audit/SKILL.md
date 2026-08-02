@@ -1,62 +1,58 @@
 ---
 name: index365-run-audit
 description: |
-  Use when the user wants to run or re-run an index365 audit on a project. Triggers:
-  "run an audit", "scan my site", "check my AI-readiness score", "re-run the audit",
-  "run a marketing signal audit", "audit example.com again". Covers both audit types
-  (AI-Readiness and Marketing Signal) and how to wait for the score. A run is a paid
-  action, see below.
+  Use when the user wants to run or re-run an index365 scan. Triggers: "run an audit",
+  "scan my site", "check my AI-readiness score", "re-run the audit", "run a marketing
+  signal audit", "audit yoursite.com again". Covers both audit types (AI-Readiness and
+  Marketing Signal), local pre-deploy scans, and async runs. A scan is a paid action,
+  see below.
 allowed-tools: Bash(index365 *)
 ---
 
 # index365 run audit
 
-Start an audit and (optionally) wait for the score.
-
-## Prerequisites
-
-- A `projectId` (from **index365-add-project** or `index365 projects list`).
-- An authenticated credential with `runs:write` (`index365 doctor` shows scopes). If
-  authentication fails or the scope is missing, use **index365-setup**. If that skill is
-  not installed, run `index365 login` (browser is the default choice; use `--web` or `INDEX365_API_KEY` without a terminal). After either recovery
-  path, re-run `index365 doctor` before continuing. Do not work around missing
-  authentication or scopes.
-
-## Pick the audit type
-
-| Run this | When the user cares about | scanMode |
-| --- | --- | --- |
-| `index365 runs start` | how AI agents + AI search read the site (AI-Readiness) | `paid_ai_readiness` |
-| `index365 marketing run` | whether demand can find, trust, act, and be measured (Marketing Signal) | `paid_marketing_signal` |
-
-If unsure, default to AI-Readiness; ask only if the user's intent is genuinely split.
-
-## Run and wait
+One command. `scan` resolves the project from the domain, waits, and prints the
+score card.
 
 ```bash
-# AI-Readiness, block until the score lands (~2–5 min; polls every 5s):
-index365 runs start --project prj_xxx --wait --json
-
-# Marketing Signal:
-index365 marketing run --project prj_xxx --wait --json
+index365 scan https://yoursite.com --yes
 ```
 
-- `--wait` polls until the run reaches a terminal status (`completed`, `failed`,
-  `failed_auto_credit`, `refunded`), then prints the final run with `score` and
-  `findingsTotal`. Without `--wait` it returns immediately with a `runId` to poll via
-  `index365 runs get <runId>`.
-- Record the `runId` and the baseline `score`, re-runs compare against it.
+- **AI-Readiness is the default.** For Marketing Signal (demand / traffic /
+  conversion questions) add `--product marketing-signal`. If unsure, default to
+  AI-Readiness; ask only if the user's intent is genuinely split.
+- **Waiting is the default.** The command blocks until the score lands and renders
+  the score card plus top findings. No polling, no ids to track.
+- **`--yes` is for agents and CI.** A new domain normally asks one [Y/n] before
+  creating the project and spending credits; `--yes` answers it. Non-interactive
+  shells never prompt: without `--yes` a new domain exits 2 with the `--yes` command
+  in the `next:` hint.
+- **A scan spends 10 credits.** To make a retry safe (network blip, agent re-entry),
+  pass a stable `--idempotency-key`; a repeat with the same key returns the same run
+  instead of double-spending.
 
-## Paid action, retry safely
-
-A run consumes credits. To make a retry safe (network blip, agent re-entry), pass a
-stable idempotency key so a repeat returns the same run instead of double-spending:
+## Async (CI, long queues)
 
 ```bash
-index365 runs start --project prj_xxx --idempotency-key "$(date +%F)-prj_xxx-airead" --wait --json
+index365 scan yoursite.com --yes --no-wait   # queue it
+index365 check                               # is it done yet?
 ```
 
-## Next
+`check` with no argument checks your most recent scan; `check yoursite.com` checks
+that site's. When it completes, `index365 report` and `index365 findings` read it
+with no ids.
 
-Hand off to **index365-read-report** with the `runId` to read the score and findings,
-or **index365-audit-and-fix** to run, read, and fix in one loop.
+## Local pre-deploy scan
+
+`index365 scan local http://localhost:3000/` scores a page served on this machine
+before you deploy (AI-Readiness only; the CLI uploads the capture, the server fetches
+nothing). Add `--fail-under 80` to exit non-zero below a score floor: that is the CI
+gate.
+
+## After the scan
+
+The score card already answers "what's my score". For findings, hand off to
+**index365-read-report**; to compare against previous scans,
+`index365 results yoursite.com` shows that site's score over time. A `--json` scan
+response carries a `resolved` block naming the run it created, but downstream
+commands do not need it: they default to the latest run.

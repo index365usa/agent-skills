@@ -12,59 +12,58 @@ allowed-tools: Bash(index365 *) Read Edit Write Grep Glob Agent
 
 # index365 audit and fix
 
-Run an index365 audit, turn findings into a prioritized plan, apply the fixes that live in
-THIS repo, and re-run to confirm the score actually moved. The agent fixes; index365
-supplies the findings and per-finding remediation. This is not a summary, it fixes.
-
-## Prerequisites
-
-- Auth works: `index365 doctor` (needs `runs:write`). If authentication fails or the scope
-  is missing, use **index365-setup**. If that skill is not installed, run `index365 login`
-  (browser is the default choice; use `--web` or `INDEX365_API_KEY` without a terminal). After either recovery path, re-run `index365 doctor`
-  before continuing. Do not work around missing authentication or scopes.
-- You are in the repository that serves the audited site (so `affectedUrls` map to files).
-- A `projectId` (`index365 projects list`, or **index365-add-project** for a new domain).
+Run an index365 scan, turn findings into a prioritized plan, apply the fixes that
+live in THIS repo, and re-scan to confirm the score actually moved. The agent fixes;
+index365 supplies the findings and per-finding remediation. This is not a summary,
+it fixes. You need to be in the repository that serves the audited site (so
+`affectedUrls` map to files); no ids are carried between steps, every read defaults
+to the latest run.
 
 ## Workflow (copy this checklist into your reply; check off as you go)
 
-- [ ] **1. Confirm project + audit type**: `index365 projects list --json`. AI-Readiness
-      (`runs start`) by default; Marketing Signal (`marketing run`) if the user asked about
-      demand/traffic/conversion.
-- [ ] **2. Run and wait**: `index365 runs start --project <id> --wait --json` (record the
-      exact command tree, `projectId`, optional target URL, baseline `score`, `runId`, and
-      baseline idempotency key). Paid action; pass `--idempotency-key` so a retry can't
-      double-spend.
-- [ ] **3. Read report + prioritize**:
-      `index365 reports context <runId> > .index365/report.json` (this CLI prints JSON to
-      stdout; redirect to a file). Delegate ranking to a subagent over the FILE; never paste
-      a full report into context. Prefer each finding's machine-readable `agentActions` over
-      re-deriving the fix. (This is **index365-triage-findings**.)
-- [ ] **4. Apply in-repo fixes**: per top finding:
-      `index365 findings get --run <runId> <findingId> --json`; map `affectedUrls` → file
-      with `Glob`/`Grep`. If the user requested preview or approval before application,
-      show a proposed patch and STOP without editing. Otherwise, the direct audit-and-fix
-      request authorizes one logical `Edit`; show the actual diff. (This is
-      **index365-apply-fix**, repeated.) STOP and ask if a fix exceeds the finding, or
-      `affectedUrls` doesn't resolve to a file; skip out-of-repo findings.
-- [ ] **5. Re-run and verify**: repeat the baseline command tree and target URL with a new
-      stable verification key such as `verify-<baselineRunId>-batch-1`; reuse that new key
-      only for retries of this post-fix request. Never reuse the baseline key, which would
-      replay the baseline run. Compare the new score/findings against the baseline,
-      matching by stable `findingId`. A fix that doesn't move the score or clear its
+- [ ] **1. Scan and wait**:
+      `index365 scan https://yoursite.com --yes --idempotency-key "baseline-<date>"`.
+      AI-Readiness by default; add `--product marketing-signal` if the user asked
+      about demand/traffic/conversion. `--yes` creates the project on a new domain
+      without a prompt. Paid action (10 credits); the idempotency key makes a retry
+      safe. Record the baseline score from the score card, and the `--product` used.
+- [ ] **2. Read + prioritize**: `index365 findings --severity critical` then
+      `high` for the worst items. For a big report, `index365 report --save` writes
+      the full payload into the git-ignored `.index365/` dir; delegate ranking to a
+      subagent over the FILE, never paste a full report into context. Prefer each
+      finding's machine-readable `agentActions` over re-deriving the fix. (This is
+      **index365-triage-findings**.)
+- [ ] **3. Apply in-repo fixes**: per top finding, `index365 findings get <n> --json`
+      (ordinal from the table); map `affectedUrls` → file with `Glob`/`Grep`. If the
+      user requested preview or approval before application, show a proposed patch
+      and STOP without editing. Otherwise, the direct audit-and-fix request
+      authorizes one logical `Edit` per finding; show the actual diff. (This is
+      **index365-apply-fix**, repeated.) STOP and ask if a fix exceeds the finding,
+      or `affectedUrls` doesn't resolve to a file; skip out-of-repo findings. Note
+      each fixed finding's stable `findingId` for the comparison in step 4.
+- [ ] **4. Re-scan and verify**: repeat the step-1 command with the same URL and
+      `--product` but a NEW stable key, e.g. `--idempotency-key "verify-batch-1"`;
+      reuse that new key only when retrying this verification. Never reuse the
+      baseline key, which would replay the baseline run. Compare the new score and
+      `index365 findings` against the baseline, matching by stable `findingId`
+      (ordinals shift between runs). A fix that doesn't move the score or clear its
       finding is not done, re-investigate.
-- [ ] **6. Report the delta**: baseline → new score, the `findingId`s fixed,
-      applied-but-unmoved (re-investigate these), and out-of-repo findings with each
-      `humanUrl` so the user can handle them in the dashboard.
+- [ ] **5. Report the delta**: baseline → new score (`index365 results yoursite.com`
+      shows both runs side by side), the `findingId`s fixed, applied-but-unmoved
+      (re-investigate these), and out-of-repo findings with each `humanUrl` so the
+      user can handle them in the dashboard.
 
 ## Output
 
-Write all run artifacts to `.index365/` (git-ignored). Field reference:
+Write saved reports and artifacts to `.index365/` (git-ignored). Field reference:
 [references/finding-schema.md](references/finding-schema.md).
 
 ## Common mistakes
 
 - Summarizing instead of fixing (that's **index365-read-report**).
-- Pasting the whole report into context instead of reading the file with `jq`/`grep`.
+- Pasting the whole saved report into context instead of reading the file with
+  `jq`/`grep`.
 - Re-deriving a fix when `agentActions` already specifies it.
-- Calling step 5 done without comparing scores against the baseline.
-- Editing files for findings whose `affectedUrls` are DNS/hosting/infra (not in this repo).
+- Calling step 4 done without comparing scores against the baseline.
+- Editing files for findings whose `affectedUrls` are DNS/hosting/infra (not in this
+  repo).

@@ -5,7 +5,7 @@ Use this example only on a website you are authorized to assess and change. It r
 ## Prerequisites
 
 - Node.js 20.18 or newer.
-- An index365 account. `index365 login` defaults to browser sign-in; in a non-interactive runtime, pass `--web` or use a dedicated revocable organization-scoped API key and verify it with `index365 doctor`.
+- An index365 account. `index365 login` opens the browser and saves the key itself; in CI or a non-interactive runtime, set `INDEX365_API_KEY` to a dedicated revocable organization-scoped API key.
 - A local repository that serves the website being assessed.
 
 ## Install and verify
@@ -14,13 +14,13 @@ Use this example only on a website you are authorized to assess and change. It r
 npx -y skills add index365usa/agent-skills --all
 npm install -g @index365/cli
 index365 login
-index365 doctor
+index365 --status
 ```
 
 ## Ask the coding agent
 
 ```text
-Use the index365-audit-and-fix skill on https://example.com. Request the appropriate index365 scan, read the returned findings, choose one in-repo finding with a bounded safe correction, show me the proposed diff, and stop for approval before applying it. After approval, apply only that correction and re-run the same scan to verify the result. Do not claim a score improvement unless the re-run proves it.
+Use the index365-audit-and-fix skill on https://yoursite.com. Request the appropriate index365 scan, read the returned findings, choose one in-repo finding with a bounded safe correction, show me the proposed diff, and stop for approval before applying it. After approval, apply only that correction and re-run the same scan to verify the result. Do not claim a score improvement unless the re-run proves it.
 ```
 
-Replace `https://example.com` with the authorized project URL. Keep generated reports in the skill's ignored artifact directory. Review every proposed change before approval. A finding or score is evidence from one run, not a guarantee of search performance, organizational AI readiness, security, or revenue.
+Replace `https://yoursite.com` with the authorized project URL. Keep generated reports in the skill's ignored artifact directory. Review every proposed change before approval. A finding or score is evidence from one run, not a guarantee of search performance, organizational AI readiness, security, or revenue.

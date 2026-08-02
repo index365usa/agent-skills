@@ -1,17 +1,17 @@
 ---
 name: index365-setup
 description: |
-  Use when index365 is being used for the first time, when any index365 command returns
-  a 401 / auth error, when `index365 doctor` reports missing authentication or a denied scope,
+  Use when index365 is being used for the first time, when any index365 command exits 3
+  or returns a 401 / auth error, when `index365 doctor` reports missing authentication,
   or when the user says "connect index365", "set up index365", "log in to index365", or
-  "add my index365 API key". This is the prerequisite gate for every other index365 skill.
+  "add my index365 API key". This is the recovery path for every other index365 skill.
   Do not work around missing or insufficient authentication, fix it here.
 allowed-tools: Bash(index365 *) Bash(npx -y @index365/cli *) Bash(npm install -g @index365/cli) Bash(claude mcp add *)
 ---
 
 # index365 setup
 
-Get the `@index365/cli` installed and authenticated for the task.
+Get the `@index365/cli` installed and signed in.
 
 ## 1. Install
 
@@ -23,73 +23,60 @@ index365() { npx -y @index365/cli "$@"; }
 
 Install unpinned so a new machine gets the current CLI. The CLI reports its own updates.
 
-## 2. Log in
+## 2. Sign in
 
 ```bash
 index365 login
 ```
 
-Interactive `index365 login` asks how you want to sign in, and browser is the default
-choice, so pressing Enter opens the browser (loopback and PKCE, nothing to paste).
-`index365 login --web` skips the menu and goes straight to the browser.
+`index365 login` opens the browser: you authorize on the dashboard and the key saves
+itself (loopback + PKCE, nothing to copy or paste). It confirms who you are signed in
+as and your credit balance. That is the whole flow on a machine with a browser.
 
-A non-interactive runtime cannot show the menu, and bare `index365 login` exits 2 there
-with guidance rather than picking for you. Pass `--web` if a browser can open. Otherwise
-create a dedicated revocable API key in
-**Org settings → API keys**. Keys are available on every plan, including Free. Current
-API keys are organization-scoped and carry the full work-area scope set; the dashboard
-does not offer a restricted-scope preset. Then use one supported non-browser path:
+In CI or a non-interactive runtime the browser consent cannot complete, so a bare
+`login` exits 3 with the exact alternative. Create a dedicated revocable API key in
+**Org settings → API keys** (available on every plan, including Free), then use one
+of:
 
 ```bash
+export INDEX365_API_KEY=i365_xxx   # preferred: keeps the key out of shell history
 index365 login --key i365_xxx
-export INDEX365_API_KEY=i365_xxx
 ```
 
 The key is saved to `~/.config/index365/config.json` (mode 0600). `INDEX365_API_KEY`
-overrides the file.
+overrides the file. Never print the key in shared logs.
 
 ## 3. Verify
 
 ```bash
-index365 doctor
+index365 --status
 ```
 
-Healthy output shows `Auth: ok`, the org, the granted scopes, and the contract version.
-If `doctor` passes, hand back to whatever skill triggered setup.
+`--status` shows auth, org, plan, credits, and your latest run at a glance. If it
+shows you signed in, hand back to whatever skill triggered setup: no further
+pre-flight is needed, every command self-reports failures through exit codes and a
+`next:` hint.
 
-## Scope readback
+## Troubleshooting (this is where `doctor` lives)
 
-| Scope | Lets the credential… | Needed by |
-| --- | --- | --- |
-| `projects:read runs:read findings:read reports:read` | read projects, runs, findings, and reports | read-report, triage |
-| `runs:write` | start audits | run-audit, audit-and-fix |
-| `projects:write` | create projects | add-project |
-| `projects:delete` | archive projects (the scope name predates the rename) | delete-project |
+`index365 doctor` diagnoses auth, connectivity, version, and config permissions;
+`doctor --fix` applies the safe fixes. Reach for it only when a command's own error
+message is not enough.
 
-The API still enforces the named scope on every endpoint. Current dashboard API keys and
-browser/OAuth credentials use the same full work-area scope set; `index365 doctor` is the
-readback. If a legacy or unsupported credential reports a missing scope, reauthenticate
-through the supported login path and do not work around it. Do not imply that the current
-dashboard can mint a restricted key.
+| Symptom | Fix |
+| --- | --- |
+| Exit code 3 / "auth" on any command | key is missing, wrong, or revoked: run `index365 login` again, or set a fresh `INDEX365_API_KEY` in a non-browser runtime |
+| `login` exits 3 saying it needs a browser | non-interactive shell: use `INDEX365_API_KEY` or `index365 login --key <key>` |
+| A command says the credential lacks a scope | sign in again through `index365 login`; current keys carry the full work-area scope set. If the scope is still absent, stop and report it |
+| `index365: command not found` | npm global bin not on PATH, or use `npx -y @index365/cli` |
+| Exit code 5 / quota or rate | plan limit or rate limit: wait and retry, or check the plan |
+| Config permission warnings | `index365 doctor --fix` |
 
 ## MCP (optional, for Claude Code / Codex / Cursor)
 
 ```bash
-index365 mcp config            # prints ready-to-paste config for each host
-# Claude Code one-liner:
-claude mcp add index365 -e INDEX365_API_KEY=i365_xxx -- npx -y @index365/mcp
+index365 mcp config   # prints ready-to-paste config for each host
 ```
 
-The MCP server acts with the credential's scopes. Current dashboard API keys include
-`runs:write`, `projects:write`, and `projects:delete`, so MCP can start scans and manage
-projects. Credit-spending and destructive calls retain their separate confirmation gates.
-
-## Troubleshooting
-
-| Symptom | Fix |
-| --- | --- |
-| `doctor` says key MISSING | run `index365 login`; without a browser, use `index365 login --key <key>` or set `INDEX365_API_KEY`, and never print the key in shared logs |
-| Exit code 3 / "auth" on any command | key is wrong or revoked: run browser login again, or use `index365 login --key <key>` / `INDEX365_API_KEY` with a fresh key in a non-browser runtime |
-| A command says the credential lacks a scope | run browser login again or use a fresh current full-scope API key; if the scope is still absent, stop and report the unsupported grant |
-| `index365: command not found` | npm global bin not on PATH, or use `npx -y @index365/cli` |
-| Exit code 5 / quota or rate | plan limit or 60/min rate, wait and retry, or check the plan |
+The MCP server calls the same `/api/v1` as the CLI and acts with the credential's
+scopes. Credit-spending and destructive calls keep their separate confirmation gates.
