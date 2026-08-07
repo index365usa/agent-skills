@@ -42,8 +42,9 @@ standard can load it directly from this repository using their own plugin instal
 
 The bundled `mcp.json` points at the hosted index365 MCP server
 (`https://index365.co/api/mcp`) with no credentials baked in. Clients that support MCP
-OAuth sign in through the browser; clients that use header auth add an
-`Authorization: Bearer` key from the [dashboard](https://index365.co/docs/developers/authentication).
+OAuth sign in through the browser; clients that use header auth send
+`Authorization: Bearer <your i365_ key>` with a key from the
+[dashboard](https://index365.co/docs/developers/authentication).
 The skills call the index365 CLI, so they run in clients with shell access and the CLI
 installed (see the prerequisite below).
 
