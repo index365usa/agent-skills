@@ -34,6 +34,20 @@ npx -y skills add index365usa/agent-skills --all
 The [`skills`](https://github.com/vercel-labs/skills) installer adds all nine skills to
 supported coding-agent runtimes. `--all` is what skips the per-skill picker.
 
+### Agent Plugins (ChatGPT, Codex, Cursor, Copilot, Kiro, VS Code)
+
+This repository is also a valid [Agent Plugins](https://agent-plugins.org/) 1.0 package:
+`plugin.json` and `mcp.json` at the root, skills under `skills/`. Clients that support the
+standard can load it directly from this repository using their own plugin install flow.
+
+The bundled `mcp.json` points at the hosted index365 MCP server
+(`https://index365.co/api/mcp`) with no credentials baked in. Clients that support MCP
+OAuth sign in through the browser; clients that use header auth send
+`Authorization: Bearer <your i365_ key>` with a key from the
+[dashboard](https://index365.co/docs/developers/authentication).
+The skills call the index365 CLI, so they run in clients with shell access and the CLI
+installed (see the prerequisite below).
+
 ## Prerequisite: index365 CLI and login
 
 ```bash

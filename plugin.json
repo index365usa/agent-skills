@@ -1,0 +1,14 @@
+{
+	"$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+	"name": "index365",
+	"version": "0.1.0",
+	"description": "Run AI-Readiness and Marketing Signal website scans from your coding agent, read prioritized findings, and apply fixes with a re-scan for proof.",
+	"author": {
+		"name": "index365",
+		"url": "https://index365.co"
+	},
+	"homepage": "https://index365.co/docs/developers/agent-skills",
+	"repository": "https://github.com/index365usa/agent-skills",
+	"license": "MIT",
+	"keywords": ["seo", "ai-readiness", "website-audit", "marketing", "mcp", "agent-skills"]
+}
